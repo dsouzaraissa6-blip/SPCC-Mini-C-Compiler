@@ -1,0 +1,232 @@
+MINI C COMPILER - COMPILATION REPORT
+Source file: tests/if_else.c
+
+PHASE 1: LEXICAL ANALYSIS - TOKEN TABLE
+Line   Lexeme                   Token category
+------ ------------------------ ----------------------
+1      int                      keyword
+1      main                     identifier
+1      (                        delimiter
+1      )                        delimiter
+1      {                        delimiter
+2      int                      keyword
+2      value                    identifier
+2      =                        operator
+2      4                        integer constant
+2      ;                        delimiter
+3      if                       keyword
+3      (                        delimiter
+3      value                    identifier
+3      >=                       relational operator
+3      4                        integer constant
+3      &&                       logical operator
+3      !                        operator
+3      (                        delimiter
+3      value                    identifier
+3      ==                       equality operator
+3      0                        integer constant
+3      )                        delimiter
+3      )                        delimiter
+3      {                        delimiter
+4      if                       keyword
+4      (                        delimiter
+4      value                    identifier
+4      <                        operator
+4      5                        integer constant
+4      )                        delimiter
+4      {                        delimiter
+5      value                    identifier
+5      =                        operator
+5      value                    identifier
+5      +                        operator
+5      1                        integer constant
+5      ;                        delimiter
+6      }                        delimiter
+6      else                     keyword
+6      {                        delimiter
+7      value                    identifier
+7      =                        operator
+7      value                    identifier
+7      *                        operator
+7      2                        integer constant
+7      ;                        delimiter
+8      }                        delimiter
+9      }                        delimiter
+9      else                     keyword
+9      {                        delimiter
+10     value                    identifier
+10     =                        operator
+10     value                    identifier
+10     -                        operator
+10     1                        integer constant
+10     ;                        delimiter
+11     }                        delimiter
+12     return                   keyword
+12     value                    identifier
+12     ;                        delimiter
+13     }                        delimiter
+
+PHASE 2: SYNTAX ANALYSIS
+Parsing successful: source matches the supported grammar.
+
+PHASE 3: SEMANTIC ANALYSIS - SYMBOL TABLES
+
+FUNCTION TABLE
+Function             Parameters  Local slots
+-------------------- ----------  -----------
+main                 0          9
+
+VARIABLE / SYMBOL TABLE
+Function             Name                 Kind       Scope  Location
+-------------------- -------------------- ---------- ------ ----------------
+main                 value                local      0      EBP-4
+main                 temporary0           temporary  0      EBP-8
+main                 temporary1           temporary  0      EBP-12
+main                 temporary2           temporary  0      EBP-16
+main                 temporary3           temporary  0      EBP-20
+main                 temporary4           temporary  1      EBP-24
+main                 temporary5           temporary  2      EBP-28
+main                 temporary6           temporary  2      EBP-32
+main                 temporary7           temporary  1      EBP-36
+
+Semantic checks passed.
+
+PHASE 4: INTERMEDIATE CODE - THREE-ADDRESS CODE
+
+main:
+  v0 = #4
+  t0 = v0 >= #4
+  t1 = v0 == #0
+  t2 = ! t1
+  t3 = t0 && t2
+  ifz t3 goto L0
+  t4 = v0 < #5
+  ifz t4 goto L2
+  t5 = v0 + #1
+  v0 = t5
+  goto L3
+L2:
+  t6 = v0 * #2
+  v0 = t6
+L3:
+  goto L1
+L0:
+  t7 = v0 - #1
+  v0 = t7
+L1:
+  return v0
+  end function
+
+PHASE 5: OPTIMIZATION - CONSTANT FOLDING
+
+main:
+  v0 = #4
+  t0 = v0 >= #4
+  t1 = v0 == #0
+  t2 = ! t1
+  t3 = t0 && t2
+  ifz t3 goto L0
+  t4 = v0 < #5
+  ifz t4 goto L2
+  t5 = v0 + #1
+  v0 = t5
+  goto L3
+L2:
+  t6 = v0 * #2
+  v0 = t6
+L3:
+  goto L1
+L0:
+  t7 = v0 - #1
+  v0 = t7
+L1:
+  return v0
+  end function
+
+PHASE 6: TARGET CODE GENERATION - X86-32 ASSEMBLY
+.intel_syntax noprefix
+    .text
+
+    .globl main
+    .type main, @function
+main:
+    push ebp
+    mov ebp, esp
+    sub esp, 36
+    mov eax, 4
+    mov DWORD PTR [ebp-4], eax
+    mov eax, DWORD PTR [ebp-4]
+    mov ecx, 4
+    cmp eax, ecx
+    setge al
+    movzx eax, al
+    mov DWORD PTR [ebp-8], eax
+    mov eax, DWORD PTR [ebp-4]
+    mov ecx, 0
+    cmp eax, ecx
+    sete al
+    movzx eax, al
+    mov DWORD PTR [ebp-12], eax
+    mov eax, DWORD PTR [ebp-12]
+    cmp eax, 0
+    sete al
+    movzx eax, al
+    mov DWORD PTR [ebp-16], eax
+    mov eax, DWORD PTR [ebp-8]
+    mov ecx, DWORD PTR [ebp-16]
+    test eax, eax
+    setne al
+    movzx eax, al
+    test ecx, ecx
+    setne cl
+    movzx ecx, cl
+    and eax, ecx
+    mov DWORD PTR [ebp-20], eax
+    mov eax, DWORD PTR [ebp-20]
+    cmp eax, 0
+    je L0
+    mov eax, DWORD PTR [ebp-4]
+    mov ecx, 5
+    cmp eax, ecx
+    setl al
+    movzx eax, al
+    mov DWORD PTR [ebp-24], eax
+    mov eax, DWORD PTR [ebp-24]
+    cmp eax, 0
+    je L2
+    mov eax, DWORD PTR [ebp-4]
+    mov ecx, 1
+    add eax, ecx
+    mov DWORD PTR [ebp-28], eax
+    mov eax, DWORD PTR [ebp-28]
+    mov DWORD PTR [ebp-4], eax
+    jmp L3
+L2:
+    mov eax, DWORD PTR [ebp-4]
+    mov ecx, 2
+    imul eax, ecx
+    mov DWORD PTR [ebp-32], eax
+    mov eax, DWORD PTR [ebp-32]
+    mov DWORD PTR [ebp-4], eax
+L3:
+    jmp L1
+L0:
+    mov eax, DWORD PTR [ebp-4]
+    mov ecx, 1
+    sub eax, ecx
+    mov DWORD PTR [ebp-36], eax
+    mov eax, DWORD PTR [ebp-36]
+    mov DWORD PTR [ebp-4], eax
+L1:
+    mov eax, DWORD PTR [ebp-4]
+    jmp .Lreturn_main
+.Lreturn_main:
+    mov esp, ebp
+    pop ebp
+    ret
+    .size main, .-main
+
+    .section .note.GNU-stack,"",@progbits
+
+COMPILATION SUCCEEDED
+Assembly file: tests/generated/if_else.asm

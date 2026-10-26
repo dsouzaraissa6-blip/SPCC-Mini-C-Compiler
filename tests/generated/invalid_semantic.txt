@@ -1,0 +1,77 @@
+MINI C COMPILER - COMPILATION REPORT
+Source file: tests/invalid_semantic.c
+
+PHASE 1: LEXICAL ANALYSIS - TOKEN TABLE
+Line   Lexeme                   Token category
+------ ------------------------ ----------------------
+1      int                      keyword
+1      add                      identifier
+1      (                        delimiter
+1      int                      keyword
+1      left                     identifier
+1      ,                        delimiter
+1      int                      keyword
+1      right                    identifier
+1      )                        delimiter
+1      {                        delimiter
+2      return                   keyword
+2      left                     identifier
+2      +                        operator
+2      right                    identifier
+2      ;                        delimiter
+3      }                        delimiter
+5      int                      keyword
+5      main                     identifier
+5      (                        delimiter
+5      )                        delimiter
+5      {                        delimiter
+6      int                      keyword
+6      result                   identifier
+6      =                        operator
+6      missing                  identifier
+6      (                        delimiter
+6      1                        integer constant
+6      )                        delimiter
+6      ;                        delimiter
+7      result                   identifier
+7      =                        operator
+7      undeclared_value         identifier
+7      +                        operator
+
+DIAGNOSTICS
+line 7: error: use of undeclared variable 'undeclared_value'
+7      add                      identifier
+7      (                        delimiter
+7      2                        integer constant
+7      )                        delimiter
+7      ;                        delimiter
+8      return                   keyword
+8      result                   identifier
+8      ;                        delimiter
+9      }                        delimiter
+
+PHASE 2: SYNTAX ANALYSIS
+Parsing successful: source matches the supported grammar.
+
+PHASE 3: SEMANTIC ANALYSIS - SYMBOL TABLES
+line 6: error: call to undeclared function 'missing'
+line 7: error: function 'add' expects 2 argument(s), got 1
+
+FUNCTION TABLE
+Function             Parameters  Local slots
+-------------------- ----------  -----------
+add                  2          1
+main                 0          4
+
+VARIABLE / SYMBOL TABLE
+Function             Name                 Kind       Scope  Location
+-------------------- -------------------- ---------- ------ ----------------
+add                  left                 parameter  0      EBP+8
+add                  right                parameter  0      EBP+12
+add                  temporary0           temporary  0      EBP-4
+main                 result               local      0      EBP-4
+main                 temporary0           temporary  0      EBP-8
+main                 temporary1           temporary  0      EBP-12
+main                 temporary2           temporary  0      EBP-16
+
+COMPILATION FAILED (3 semantic error(s)).

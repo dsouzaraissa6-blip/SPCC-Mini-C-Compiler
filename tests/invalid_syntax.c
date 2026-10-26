@@ -1,0 +1,4 @@
+int main() {
+    int value = 10
+    return value;
+}

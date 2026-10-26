@@ -1,0 +1,34 @@
+MINI C COMPILER - COMPILATION REPORT
+Source file: tests/invalid_syntax.c
+
+PHASE 1: LEXICAL ANALYSIS - TOKEN TABLE
+Line   Lexeme                   Token category
+------ ------------------------ ----------------------
+1      int                      keyword
+1      main                     identifier
+1      (                        delimiter
+1      )                        delimiter
+1      {                        delimiter
+2      int                      keyword
+2      value                    identifier
+2      =                        operator
+2      10                       integer constant
+3      return                   keyword
+
+DIAGNOSTICS
+line 3: error: syntax error: syntax error, unexpected RETURN, expecting ',' or ';'
+
+PHASE 2: SYNTAX ANALYSIS
+Parsing failed.
+
+FUNCTION TABLE
+Function             Parameters  Local slots
+-------------------- ----------  -----------
+main                 0          1
+
+VARIABLE / SYMBOL TABLE
+Function             Name                 Kind       Scope  Location
+-------------------- -------------------- ---------- ------ ----------------
+main                 value                local      0      EBP-4
+
+COMPILATION FAILED (1 error(s)).

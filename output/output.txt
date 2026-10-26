@@ -1,0 +1,265 @@
+MINI C COMPILER - COMPILATION REPORT
+Source file: input.c
+
+PHASE 1: LEXICAL ANALYSIS - TOKEN TABLE
+Line   Lexeme                   Token category
+------ ------------------------ ----------------------
+2      int                      keyword
+2      add                      identifier
+2      (                        delimiter
+2      int                      keyword
+2      a                        identifier
+2      ,                        delimiter
+2      int                      keyword
+2      b                        identifier
+2      )                        delimiter
+2      {                        delimiter
+3      return                   keyword
+3      a                        identifier
+3      +                        operator
+3      b                        identifier
+3      ;                        delimiter
+4      }                        delimiter
+6      int                      keyword
+6      main                     identifier
+6      (                        delimiter
+6      )                        delimiter
+6      {                        delimiter
+7      int                      keyword
+7      x                        identifier
+7      =                        operator
+7      5                        integer constant
+7      ;                        delimiter
+8      int                      keyword
+8      y                        identifier
+8      =                        operator
+8      add                      identifier
+8      (                        delimiter
+8      x                        identifier
+8      ,                        delimiter
+8      3                        integer constant
+8      )                        delimiter
+8      ;                        delimiter
+10     if                       keyword
+10     (                        delimiter
+10     y                        identifier
+10     >                        operator
+10     5                        integer constant
+10     )                        delimiter
+10     {                        delimiter
+11     y                        identifier
+11     =                        operator
+11     y                        identifier
+11     *                        operator
+11     2                        integer constant
+11     ;                        delimiter
+12     }                        delimiter
+12     else                     keyword
+12     {                        delimiter
+13     y                        identifier
+13     =                        operator
+13     y                        identifier
+13     -                        operator
+13     1                        integer constant
+13     ;                        delimiter
+14     }                        delimiter
+16     while                    keyword
+16     (                        delimiter
+16     x                        identifier
+16     >                        operator
+16     0                        integer constant
+16     )                        delimiter
+16     {                        delimiter
+17     x                        identifier
+17     =                        operator
+17     x                        identifier
+17     -                        operator
+17     1                        integer constant
+17     ;                        delimiter
+18     }                        delimiter
+20     return                   keyword
+20     y                        identifier
+20     ;                        delimiter
+21     }                        delimiter
+
+PHASE 2: SYNTAX ANALYSIS
+Parsing successful: source matches the supported grammar.
+
+PHASE 3: SEMANTIC ANALYSIS - SYMBOL TABLES
+
+FUNCTION TABLE
+Function             Parameters  Local slots
+-------------------- ----------  -----------
+add                  2          1
+main                 0          8
+
+VARIABLE / SYMBOL TABLE
+Function             Name                 Kind       Scope  Location
+-------------------- -------------------- ---------- ------ ----------------
+add                  a                    parameter  0      EBP+8
+add                  b                    parameter  0      EBP+12
+add                  temporary0           temporary  0      EBP-4
+main                 x                    local      0      EBP-4
+main                 y                    local      0      EBP-8
+main                 temporary0           temporary  0      EBP-12
+main                 temporary1           temporary  0      EBP-16
+main                 temporary2           temporary  1      EBP-20
+main                 temporary3           temporary  1      EBP-24
+main                 temporary4           temporary  0      EBP-28
+main                 temporary5           temporary  1      EBP-32
+
+Semantic checks passed.
+
+PHASE 4: INTERMEDIATE CODE - THREE-ADDRESS CODE
+
+add:
+  t0 = p0 + p1
+  return t0
+  end function
+
+main:
+  v1 = #5
+  t0 = call add(v1, #3)
+  v2 = t0
+  t1 = v2 > #5
+  ifz t1 goto L0
+  t2 = v2 * #2
+  v2 = t2
+  goto L1
+L0:
+  t3 = v2 - #1
+  v2 = t3
+L1:
+L2:
+  t4 = v1 > #0
+  ifz t4 goto L3
+  t5 = v1 - #1
+  v1 = t5
+  goto L2
+L3:
+  return v2
+  end function
+
+PHASE 5: OPTIMIZATION - CONSTANT FOLDING
+
+add:
+  t0 = p0 + p1
+  return t0
+  end function
+
+main:
+  v1 = #5
+  t0 = call add(v1, #3)
+  v2 = t0
+  t1 = v2 > #5
+  ifz t1 goto L0
+  t2 = v2 * #2
+  v2 = t2
+  goto L1
+L0:
+  t3 = v2 - #1
+  v2 = t3
+L1:
+L2:
+  t4 = v1 > #0
+  ifz t4 goto L3
+  t5 = v1 - #1
+  v1 = t5
+  goto L2
+L3:
+  return v2
+  end function
+
+PHASE 6: TARGET CODE GENERATION - X86-32 ASSEMBLY
+.intel_syntax noprefix
+    .text
+
+    .globl add
+    .type add, @function
+add:
+    push ebp
+    mov ebp, esp
+    sub esp, 4
+    mov eax, DWORD PTR [ebp+8]
+    mov ecx, DWORD PTR [ebp+12]
+    add eax, ecx
+    mov DWORD PTR [ebp-4], eax
+    mov eax, DWORD PTR [ebp-4]
+    jmp .Lreturn_add
+.Lreturn_add:
+    mov esp, ebp
+    pop ebp
+    ret
+    .size add, .-add
+
+    .globl main
+    .type main, @function
+main:
+    push ebp
+    mov ebp, esp
+    sub esp, 32
+    mov eax, 5
+    mov DWORD PTR [ebp-4], eax
+    mov eax, 3
+    push eax
+    mov eax, DWORD PTR [ebp-4]
+    push eax
+    call add
+    add esp, 8
+    mov DWORD PTR [ebp-12], eax
+    mov eax, DWORD PTR [ebp-12]
+    mov DWORD PTR [ebp-8], eax
+    mov eax, DWORD PTR [ebp-8]
+    mov ecx, 5
+    cmp eax, ecx
+    setg al
+    movzx eax, al
+    mov DWORD PTR [ebp-16], eax
+    mov eax, DWORD PTR [ebp-16]
+    cmp eax, 0
+    je L0
+    mov eax, DWORD PTR [ebp-8]
+    mov ecx, 2
+    imul eax, ecx
+    mov DWORD PTR [ebp-20], eax
+    mov eax, DWORD PTR [ebp-20]
+    mov DWORD PTR [ebp-8], eax
+    jmp L1
+L0:
+    mov eax, DWORD PTR [ebp-8]
+    mov ecx, 1
+    sub eax, ecx
+    mov DWORD PTR [ebp-24], eax
+    mov eax, DWORD PTR [ebp-24]
+    mov DWORD PTR [ebp-8], eax
+L1:
+L2:
+    mov eax, DWORD PTR [ebp-4]
+    mov ecx, 0
+    cmp eax, ecx
+    setg al
+    movzx eax, al
+    mov DWORD PTR [ebp-28], eax
+    mov eax, DWORD PTR [ebp-28]
+    cmp eax, 0
+    je L3
+    mov eax, DWORD PTR [ebp-4]
+    mov ecx, 1
+    sub eax, ecx
+    mov DWORD PTR [ebp-32], eax
+    mov eax, DWORD PTR [ebp-32]
+    mov DWORD PTR [ebp-4], eax
+    jmp L2
+L3:
+    mov eax, DWORD PTR [ebp-8]
+    jmp .Lreturn_main
+.Lreturn_main:
+    mov esp, ebp
+    pop ebp
+    ret
+    .size main, .-main
+
+    .section .note.GNU-stack,"",@progbits
+
+COMPILATION SUCCEEDED
+Assembly file: output/output.asm

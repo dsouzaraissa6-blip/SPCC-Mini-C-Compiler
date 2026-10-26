@@ -1,0 +1,134 @@
+MINI C COMPILER - COMPILATION REPORT
+Source file: tests/arithmetic.c
+
+PHASE 1: LEXICAL ANALYSIS - TOKEN TABLE
+Line   Lexeme                   Token category
+------ ------------------------ ----------------------
+1      int                      keyword
+1      main                     identifier
+1      (                        delimiter
+1      )                        delimiter
+1      {                        delimiter
+2      int                      keyword
+2      answer                   identifier
+2      =                        operator
+2      2                        integer constant
+2      +                        operator
+2      3                        integer constant
+2      *                        operator
+2      4                        integer constant
+2      ;                        delimiter
+3      answer                   identifier
+3      =                        operator
+3      answer                   identifier
+3      +                        operator
+3      (                        delimiter
+3      18                       integer constant
+3      /                        operator
+3      3                        integer constant
+3      )                        delimiter
+3      -                        operator
+3      (                        delimiter
+3      7                        integer constant
+3      %                        operator
+3      4                        integer constant
+3      )                        delimiter
+3      ;                        delimiter
+4      return                   keyword
+4      answer                   identifier
+4      ;                        delimiter
+5      }                        delimiter
+
+PHASE 2: SYNTAX ANALYSIS
+Parsing successful: source matches the supported grammar.
+
+PHASE 3: SEMANTIC ANALYSIS - SYMBOL TABLES
+
+FUNCTION TABLE
+Function             Parameters  Local slots
+-------------------- ----------  -----------
+main                 0          7
+
+VARIABLE / SYMBOL TABLE
+Function             Name                 Kind       Scope  Location
+-------------------- -------------------- ---------- ------ ----------------
+main                 answer               local      0      EBP-4
+main                 temporary0           temporary  0      EBP-8
+main                 temporary1           temporary  0      EBP-12
+main                 temporary2           temporary  0      EBP-16
+main                 temporary3           temporary  0      EBP-20
+main                 temporary4           temporary  0      EBP-24
+main                 temporary5           temporary  0      EBP-28
+
+Semantic checks passed.
+
+PHASE 4: INTERMEDIATE CODE - THREE-ADDRESS CODE
+
+main:
+  t0 = #3 * #4
+  t1 = #2 + t0
+  v0 = t1
+  t2 = #18 / #3
+  t3 = v0 + t2
+  t4 = #7 % #4
+  t5 = t3 - t4
+  v0 = t5
+  return v0
+  end function
+
+PHASE 5: OPTIMIZATION - CONSTANT FOLDING
+
+main:
+  t0 = #12
+  t1 = #14
+  v0 = #14
+  t2 = #6
+  t3 = v0 + #6
+  t4 = #3
+  t5 = t3 - #3
+  v0 = t5
+  return v0
+  end function
+
+PHASE 6: TARGET CODE GENERATION - X86-32 ASSEMBLY
+.intel_syntax noprefix
+    .text
+
+    .globl main
+    .type main, @function
+main:
+    push ebp
+    mov ebp, esp
+    sub esp, 28
+    mov eax, 12
+    mov DWORD PTR [ebp-8], eax
+    mov eax, 14
+    mov DWORD PTR [ebp-12], eax
+    mov eax, 14
+    mov DWORD PTR [ebp-4], eax
+    mov eax, 6
+    mov DWORD PTR [ebp-16], eax
+    mov eax, DWORD PTR [ebp-4]
+    mov ecx, 6
+    add eax, ecx
+    mov DWORD PTR [ebp-20], eax
+    mov eax, 3
+    mov DWORD PTR [ebp-24], eax
+    mov eax, DWORD PTR [ebp-20]
+    mov ecx, 3
+    sub eax, ecx
+    mov DWORD PTR [ebp-28], eax
+    mov eax, DWORD PTR [ebp-28]
+    mov DWORD PTR [ebp-4], eax
+    mov eax, DWORD PTR [ebp-4]
+    jmp .Lreturn_main
+.Lreturn_main:
+    mov esp, ebp
+    pop ebp
+    ret
+    .size main, .-main
+
+    .section .note.GNU-stack,"",@progbits
+
+COMPILATION SUCCEEDED
+Assembly file: tests/generated/arithmetic.asm
