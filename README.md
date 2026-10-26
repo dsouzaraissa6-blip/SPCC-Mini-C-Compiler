@@ -188,3 +188,5 @@ For a viva, describe the phases like this:
    safe constant expressions and substitutes constants for known temporaries.
 6. **Target code generation:** The backend maps IR values to stack slots and
    emits 32-bit x86 instructions following the documented `cdecl` convention.
+#   S P C C - M i n i - C - C o m p i l e r  
+ 
